@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image";
-import {ChangeEvent} from "react"
+import { ChangeEvent, useState } from "react"
 
 // shadcn form // require => npx shadcn-ui@latest add [textarea]
 import * as z from "zod";
@@ -23,7 +23,11 @@ import { usePathname, useRouter } from "next/navigation";
 // import { ChangeEvent, useState } from "react";
 // zod is a ts-first schema validation => create diff schemas for the form
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useUploadThing } from "@/lib/uploadthing";
+
+import { isBase64Image } from "@/lib/utils";
 import { UserValidation } from "@/lib/validations/user";
+import { updateUser } from "@/lib/actions/user.actions";
 
 interface Props {
   user: {
@@ -38,6 +42,9 @@ interface Props {
 }
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
+  const [files, setFiles] = useState<File[]>([])
+  const { startUpload } = useUploadThing("media")
+  
   const router = useRouter();
   const pathname = usePathname();
   const form = useForm({
@@ -50,18 +57,62 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     }
   });
   
+  // allows us to change the onboarding image
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
     fieldChange: (value: string) => void
   ) => {
     e.preventDefault();
+    const fileReader = new FileReader();
+    
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      
+      setFiles(Array.from(e.target.files));
+      
+      // if no images, exit immediately
+      if (!file.type.includes('image')) return;
+      
+      // if images exist
+      fileReader.onload = async (event) => {
+        const imageDataUrl = event.target?.result?.toString() || '';
+        
+        fieldChange(imageDataUrl);
+      }
+      fileReader.readAsDataURL(file);
+    }
   };
-  
-  function onSubmit(values: z.infer<typeof UserValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  // reupload new image and update the user in the database
+const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+    // get value from profile photo "blob"
+    const blob = values.profile_photo;
+    
+    const hasImageChanged = isBase64Image(blob);
+    
+    if (hasImageChanged) {
+      const imgRes = await startUpload(files);
+      
+      if (imgRes && imgRes[0].fileUrl) {
+        // react hook form => don't have to worry about useState
+        values.profile_photo = imgRes[0].fileUrl;
+      }
+    }
+  // TODO: Update user profile
+  await updateUser({
+    name: values.name,
+    path: pathname,
+    username: values.username,
+    userId: user.id,
+    bio: values.bio,
+    image: values.profile_photo,
+  });
+
+  if (pathname === "/profile/edit") {
+    router.back();
+  } else {
+    router.push("/");
   }
+};
   
   
   return (
