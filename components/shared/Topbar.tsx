@@ -13,6 +13,7 @@ function Topbar() {
 
       <div className='flex items-center gap-1'>
         <div className='block md:hidden'>
+{/* provided from ClerkProvider, allows to sign in without dynamic blocks */}
           <SignedIn>
             <SignOutButton>
               <div className='flex cursor-pointer'>
@@ -26,7 +27,7 @@ function Topbar() {
             </SignOutButton>
           </SignedIn>
         </div>
-
+{/*  */}
         <OrganizationSwitcher
           appearance={{
             elements: {
