@@ -98,12 +98,13 @@ const onSubmit = async (values: z.infer<typeof UserValidation>) => {
       }
     }
   // TODO: Update user profile
+  // wrapping this in object to avoid type errors
   await updateUser({
-    name: values.name,
-    path: pathname,
-    username: values.username,
     userId: user.id,
+    username: values.username,
+    name: values.name,
     bio: values.bio,
+    path: pathname,
     image: values.profile_photo,
   });
 
