@@ -13,7 +13,7 @@ interface Params {
   path: string;
 }
 // destructuring the properties from User object
-export const updateUser = async ({
+export async function updateUser ({
   userId,
   username,
   name,
@@ -21,7 +21,7 @@ export const updateUser = async ({
   image,
   path,
 
-}: Params): Promise<void> => {
+}: Params): Promise<void> {
   connectToDB();
   
   try {
@@ -43,5 +43,19 @@ export const updateUser = async ({
     }
   } catch (error: any) {
     throw new Error(`Failed to create/update user: ${error.message}`)
+  }
+}
+
+export async function fetchUser(userId: string) {
+  try {
+    connectToDB();
+    
+    return await User.findOne({id: userId})
+    // .populate({ 
+    //   path: 'communities',
+    //   model: Community
+    // })
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`)
   }
 }
