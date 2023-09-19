@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 
 
 import { CommentValidation } from "@/lib/validations/thread";
+import { addCommentToThread } from "@/lib/actions/thread.actions";
 // import { createThread } from "@/lib/actions/thread.actions";
 
 interface Props {
@@ -45,14 +46,11 @@ const Comment = ({
   });
 
   const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
-    // await createThread({
-    //   text: values.thread,
-    //   author: userId,
-    //   communityId: organization ? organization.id : null,
-    //   path: pathname,
-    // });
-
-    router.push("/");
+    await addCommentToThread(
+      threadId, values.thread, JSON.parse(currentUserId), pathname);
+    
+    // if you want to add another comment
+    form.reset();
   };
   
   
