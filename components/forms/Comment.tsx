@@ -13,7 +13,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from '@/components/ui/input';
@@ -60,35 +59,35 @@ const Comment = ({
   
   return (
     <Form {...form}>
-      <form
-        className='mt-10 flex flex-col justify-start gap-10'
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form className='comment-form' onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name='thread'
           render={({ field }) => (
-            <FormItem className='flex w-full flex-col gap-3'>
-              <FormLabel className='text-base-semibold text-light-2'>
+            <FormItem className='flex w-full items-center gap-3'>
+              <FormLabel>
                 <Image
                   src={currentUserImg}
-                  alt="Profile Image"
+                  alt='current_user'
                   width={48}
                   height={48}
-                  className="rounded-full object-cover"
+                  className='rounded-full object-cover'
                 />
               </FormLabel>
               <FormControl className='border-none bg-transparent'>
-                <Input type="text" placeholder="Comment..."
-                className="no-focus text-light-1 outline-none" {...field} />
+                <Input
+                  type='text'
+                  {...field}
+                  placeholder='Comment...'
+                  className='no-focus text-light-1 outline-none'
+                />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type='submit' className='bg-primary-500'>
-          Post Thread
+        <Button type='submit' className='comment-form_btn'>
+          Reply
         </Button>
       </form>
     </Form>
