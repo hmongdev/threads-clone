@@ -71,6 +71,8 @@ return { posts, isNext };
 }
 
 // GET specific thread by [id]
+
+// this is complicated bc you want to view the thread, but also the users who commented on the thread, as well as the comments of THOSE comments
 export async function fetchThreadById(threadId: string) {
   connectToDB();
 
@@ -80,12 +82,7 @@ export async function fetchThreadById(threadId: string) {
         path: "author",
         model: User,
         select: "_id id name image",
-      }) // Populate the author field with _id and username
-      // .populate({
-      //   path: "community",
-      //   model: Community,
-      //   select: "_id id name image",
-      // }) // Populate the community field with _id and name
+      })
       .populate({
         path: "children", // Populate the children field
         populate: [
@@ -106,7 +103,7 @@ export async function fetchThreadById(threadId: string) {
         ],
       })
       .exec();
-
+    
     return thread;
   } catch (err) {
     console.error("Error while fetching thread:", err);
