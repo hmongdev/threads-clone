@@ -7,7 +7,6 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();
 
-// auth is from our user
 const getUser = async () => await currentUser();
 
 export const ourFileRouter = {
