@@ -1,11 +1,10 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { useOrganization } from "@clerk/nextjs";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname, useRouter } from "next/navigation";
+import { z } from "zod";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { usePathname } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Form,
@@ -14,13 +13,12 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from '@/components/ui/input';
 
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 import { CommentValidation } from "@/lib/validations/thread";
 import { addCommentToThread } from "@/lib/actions/thread.actions";
-// import { createThread } from "@/lib/actions/thread.actions";
 
 interface Props {
   threadId: string;
@@ -28,33 +26,27 @@ interface Props {
   currentUserId: string;
 }
 
-const Comment = ({
-  threadId,
-  currentUserImg,
-  currentUserId,
-}: Props) => {
-  const router = useRouter();
+function Comment({ threadId, currentUserImg, currentUserId }: Props) {
   const pathname = usePathname();
-
-  const { organization } = useOrganization();
 
   const form = useForm<z.infer<typeof CommentValidation>>({
     resolver: zodResolver(CommentValidation),
     defaultValues: {
-      thread: ""
+      thread: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
     await addCommentToThread(
-      threadId, values.thread, JSON.parse(currentUserId), pathname);
-    
-    // if you want to add another comment
+      threadId,
+      values.thread,
+      JSON.parse(currentUserId),
+      pathname
+    );
+
     form.reset();
   };
-  
-  
-  
+
   return (
     <Form {...form}>
       <form className='comment-form' onSubmit={form.handleSubmit(onSubmit)}>
@@ -89,7 +81,7 @@ const Comment = ({
         </Button>
       </form>
     </Form>
-  )
+  );
 }
 
-export default Comment
+export default Comment;
