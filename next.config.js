@@ -13,6 +13,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "utfs.io",
+      },
+      {
+        protocol: "https",
         hostname: "img.clerk.com",
       },
       {
