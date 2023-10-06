@@ -157,6 +157,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
   }
 }
 
+// multi-level commenting functionality
 export async function fetchThreadById(threadId: string) {
   connectToDB();
 
@@ -196,7 +197,7 @@ export async function fetchThreadById(threadId: string) {
     return thread;
   } catch (err) {
     console.error("Error while fetching thread:", err);
-    throw new Error("Unable to fetch thread");
+    throw new Error("Unable to fetch thread details");
   }
 }
 

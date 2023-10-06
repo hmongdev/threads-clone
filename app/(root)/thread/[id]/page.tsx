@@ -9,7 +9,7 @@ import { fetchThreadById } from "@/lib/actions/thread.actions";
 
 export const revalidate = 0;
 
-async function page({ params }: { params: { id: string } }) {
+async function Page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
 
   const user = await currentUser();
@@ -63,4 +63,4 @@ async function page({ params }: { params: { id: string } }) {
   );
 }
 
-export default page;
+export default Page;
