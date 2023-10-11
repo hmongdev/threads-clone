@@ -153,6 +153,7 @@ export async function fetchUsers({
   }
 }
 
+// Gets all comments from a post, puts them together, and shows them to a person
 export async function getActivity(userId: string) {
   try {
     connectToDB();
